@@ -45,3 +45,17 @@
   - 즉 개발자는 JPA를 통해서 객체(엔티티)에만 신경쓰고 작업할 수 있다고 생각한다.
 
 - 잘 사용하게 된다면 성능향상에 좋다
+
+
+
+### 강의 궁금증
+
+- DB isolation level read commit 임에도 애플리케이션에서 repeatable read를 보장하는 이유?
+
+  - Unit(즉 데이터베이스) 마다 EntityManagerFactory를 생성이 되고 EntityManagerFactory는 Entity를 관리하는 역할인 EntityManager를
+
+    생성한다
+
+  - 기본적으로 영속성 컨텍스트는 트랜잭션의 주기와 동일하여 트랜잭션이 시작과 끝까지 영속성 컨텍스트는 살아있다.
+
+  - 즉 트랜잭션이 시작하면 사용이 되어지는데 다른 다른 쓰레드들은 서로 다른 트랜잭션을 사용하기 때문에 영속성 컨텍스트에 저장되는 데이터가 달라지기에 DB의 isolation레벨이 ReadCommit이여도 repeatable read를 보장한다
