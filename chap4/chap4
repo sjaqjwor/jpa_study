@@ -1,0 +1,85 @@
+## 객체와 테이블 매칭
+
+- @Entity가 붙은 클래스는 JPA가 관리하는 엔티티
+- 기본생성자 필수(public , protected)
+  - JPA가 내부적으로 Reflection을 사용하여 객체를 생성하여 사용하기에 기본 생성자 필요
+  - private는 안되는 이유는 proxy때문
+    - proxy객체는 직접 만든 객체 클래스를 상속하기 때문에 public , protected 기본 생성자 필요
+- final , enum , interface , interclass사용 불가 , 저장컬럼에 final 불가
+
+
+
+## 테이블 자동생성
+
+#### create
+
+- 기존 테이블 삭제 후 생성
+
+#### create-drop
+
+- 종료시점에 테이블 삭제
+
+#### update
+
+- 변경분만 반영(운영서버 권장 x)
+- 사실상 어플리케이션이 켜지면서 alter을 날리게 되는데 alter 잘못했다가 난리난다...
+
+#### validate
+
+- 정상 매핑 되었는지만 확인
+- 매핑정보 안맞으면 에러.
+
+
+
+## 매핑 어노테이션
+
+#### @column 
+
+- 해당 어노테이션 안에 다양한 제약조건을 사용할 수 있다.
+
+#### @Temporal
+
+- 최신 버전을 사용하면 localDate , LocalDateTime은 따로 어노테이션 필요업사
+
+#### @Enumerated
+
+- EnumType기본 ordinal
+- ordinal을 사용하게 되면 개발자 혹은 enum에 추가되는 순서에따라 값을 보장 할 수 없다.
+
+#### @Lob
+
+##### @Transient
+
+
+
+## 기본키 매핑
+
+#### @ID
+
+- id값을 직접 부여한다
+- 개발자가 직접 넣어주는 방식
+
+#### @GeneratedValue
+
+- default 전략은 auto
+- identity
+  - 기본키 생성을 데이터 베이스에 위임(디비 dialect에 따라 다름) 자주쓰는 mysql은 auto
+  - identity는 데이터 베이스에 위임하기에 insert 쿼리문이 실행되기 전까지는 id값을 모르기때문에 em.persist영속 상태로 만들때 이미 쿼리가 실행된다.
+- sequence
+  - 디비에 시퀀스 오브젝트로 부터 아이디 값을 할당 받아서 사용한다
+  - identity랑은 다르게 다음 id값을 위한 쿼리만 수행하고 insert문은 수행하지 않는다
+  - 테이블마다 시퀀스 테이블을 만들어서 사용할 수있다(@SequenceGenerator)
+  - table전략
+    - 키생성 전용 테이븡릉 하나 만들어서 데이터베이스 시퀀스를 흉내내는 전략
+  - allocate 설정을 하게 되면 해당 숫자만큼 미리 DB에 시퀀스 값을 올려놓고 어플리케이션 단에서 메모리에 가지고 있다가 nextcall 쿼리 하지 않고 해당 메모리에서 가져다씀
+    - 해당 값은 엔티티매니저팩토리에 identifierGenerator가 가지고 있음
+    - ![image-20220901203726415](/Users/seungki1993/Desktop/jpa/jpa_study/chap4/image-20220901203726415.png)
+
+
+
+
+
+
+
+
+
